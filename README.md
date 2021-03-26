@@ -331,6 +331,63 @@ RDMS는 full outer join 의미가 없다.
         FROM 부모테이블 부 left outer join 자식테이블 자 on 부.pk = 자.fk;
         WHERE 자.pk is null
 
-어느 한쪽 테이블에서 결과각ㅂㅅ을 
-모두
 
+3] self join
+---
+
+# 서브쿼리 (SUBQUERY)
+
+서브쿼리는 다른 하나의 SQL문장에 기술된 SELECT문장을 말한다
+
+서브쿼리는 괄호로 묶어야 한다.
+
+서브쿼리만을 단독 실행시 실행이 된다.
+
+서브쿼리는 연산자의 오른쪽에 기술 되어야 한다.
+
+단일행 서브 쿼리에는 단일행 연산자를 다중행 서브쿼리에는 복수행 연산자를 사용한다
+
+서브쿼리는 SELECT, FROM, WHERE절 등에 위치할 수 있다
+
+FROM절 서브쿼리를 쓸 때 SELECT이랑 칼럼이 같거나 더 커야함
+
+
+    //문12
+    SELECT sal, ename, job
+    FROM emp
+    where sal in ((select max(sal) from emp), (select min(sal) from emp))
+    order by sal  
+    
+    //문13
+    SELECT ename, sal, d.deptno, dname, hiredate
+    from dept d join emp e on d.deptno = e.deptno
+    where (e.deptno,sal) in (select e.deptno, max(sal) from emp e group by e.deptno)
+
+
+# TOP쿼리
+
+반드시 정렬되어야 한다
+
+얻어진 질의 결과에서 위에서부터 순서대로 몇 개만 가져오는 경우에 사용함
+
+데이터가 입력된 순서대로 혹은 서브쿼리에 의해 생성된 테이블에 레코드가 생성된 순서대로 내부적으로 번호가 순차적으로 부여되고 그 부여된 번호는 ROWNUM이라는 컬럼에 내부적으로 저장되어 있다.
+
+    기본 구조
+    Select * 
+    from (select * from 테이블명 order by PK컬러명)
+    where rownum <= n;
+  
+    select ename, sal, job
+    from (select * from emp order by sal desc)
+    where rownum <=3
+
+1] 특정 구간에 있는 레코드
+---
+
+STEP 1] 서브쿼리안의 서브쿼리는 특정 컬럼으로 ORDER BY DESC 그리고 생성된 테이블 별칭을 부여
+
+STEP 2] 서브쿼리안의 SELECT절에서 STEP1의 별칭.*,ROWNUM 컬럼별칭을 기술한다
+
+STEP 3] 밖의 WHERE절에서 ROWNUM을 별칭한 이름으로 between a and b
+
+--
