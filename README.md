@@ -9,14 +9,14 @@ DML
 DCL
 
 
-2] select
+# select
+
+1]  || : 문장과 열 합칠 때
+  
+2]  '' : 문장
+  
+3]  AS : 별칭 (생략 가능)
 ---
-[1]  || : 문장과 열 합칠 때
-  
-[2]  '' : 문장
-  
-[3]  AS : 별칭 (생략 가능)
-  
     SELECT ename || '의 연봉은 ' || sal
     FROM emp;
     
@@ -43,8 +43,8 @@ DCL
     FROM emp;
     // 셀 이름이 연봉
   
-[4] distinct : 중복행 제거 (키워드는 항상 SELECT 바로 다음에 기술한다.)
-  
+4] distinct : 중복행 제거 (키워드는 항상 SELECT 바로 다음에 기술한다.)
+---
 모든 칼럼이 영향 받는다.
     
     SELECT DISTINCT job 
@@ -54,8 +54,8 @@ DCL
     FROM emp;
 
   
-[5] where절 : 특정행의 검색
-
+5] where절 : 특정행의 검색
+---
   and, or, not은 그대로 기술
   
   Between a and b, in, like
@@ -108,8 +108,10 @@ DCL
     FROM emp
     WHERE job = 'CLERK' and deptno=20 or job='SALESMAN' and deptno=30
     
-[6] Like 연산자 : 검색 스트링 값에 대한 와일드 카드 검색
+6] Like 연산자 : 검색 스트링 값에 대한 와일드 카드 검색
+---
 % : 임의의 0개이상의 문자열
+
 _ : 임의의 한 글자
     
     SELECT ename
@@ -179,7 +181,8 @@ _ : 임의의 한 글자
     FROM employees
     WHERE phone_number LIKE '011%'
 
-[7] Order By 절 사용한다
+7] Order By 절 사용한다
+---
   
     SELECT ename, job, sal
     FROM emp;
@@ -206,7 +209,9 @@ _ : 임의의 한 글자
     WHERE ename LIKE '%A%'
     ORDER BY sal,depto DESC;
     
-[8] Gropu by절 : 그룹함수는 Select문에서 단독으로 쓸 수 있으나, 다른 칼럼정보를 함께 출력할 수 없다.
+8] Gropu by절
+---
+그룹함수는 Select문에서 단독으로 쓸 수 있으나, 다른 칼럼정보를 함께 출력할 수 없다.
 
 Select절에서 group by절 이외 모든 컬럼 group by 해야한다.
 
@@ -246,7 +251,9 @@ ORDER BY절 전에 기술해야 한다
      GROUP BY deptno;
      //순서가 Where -> Gruop by
   
-[9] HAVING절 : GROUP BY절에 대한 조건
+9] HAVING절 
+---
+GROUP BY절에 대한 조건
 
      SELECT deptno,min(sal)
      FROM emp
@@ -281,3 +288,31 @@ ORDER BY절 전에 기술해야 한다
      SELECT count(*)
      FROM emp
      WHERE sal>=1000 and ename LIKE '%S';
+  
+# join
+
+1] inner join
+---
+
+2개 이상의 테이블로부터 자료를 검색하기 위해서 Join을 사용한다.
+
+일반적으로 pk와 fk을 사용하여 join하는 경우가 대부분
+
+가장 많이 사용되는 조인문으로 테이블 간에 연결 조건을 모두 만족하는 행을 검색하는데 사용한다
+
+검색시 검색되는 컬럼이 조인하는 테이블 모두에 존재한다면 반드시 컬럼명에 테이블 이름을 "테이블명.컬럼명'의 형태로 기술
+
+자식테이블 레코드 10개, 부모테이블 레코드 100개 inner join하면 레코드 수는 10개
+PK : 중복 X, Null X
+
+테이블 칭을 명부여하여 긴 테이블 명을 간단하게 사용 (as 사용 불가)
+
+    [정규 표현]
+    SELECT 칼럼명
+    FROM 테이블1 join 테이블2 On 테이블1.pk = 테이블2.fk
+    join 테이블3 on 테이블2.pk = 테이블3.fk
+
+    SELECT ename,sal,job,dname
+    FROM emp e JOIN dept d ON e.deptno = d.deptno;
+
+    
