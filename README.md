@@ -315,4 +315,22 @@ PK : 중복 X, Null X
     SELECT ename,sal,job,dname
     FROM emp e JOIN dept d ON e.deptno = d.deptno;
 
-    
+2] outer join
+---
+어느 한쪽 테이블에서 결과값을 모두 가져오는 join문이다.
+
+어느 쪽 테이블에서 가져올지 즉 왼쪽인지 오른쪽인지 아니면 양쪽 테이블인지 반드시 기술해야 한다.
+
+자식테이블 left outer join 부모테이블은 ineer join과 같다
+
+RDMS는 full outer join 의미가 없다.
+
+자식에 없는 부모 튜플도 outer join으로 알 수 있다. 
+      
+        SELECT 부모테이블 칼럼
+        FROM 부모테이블 부 left outer join 자식테이블 자 on 부.pk = 자.fk;
+        WHERE 자.pk is null
+
+어느 한쪽 테이블에서 결과각ㅂㅅ을 
+모두
+
