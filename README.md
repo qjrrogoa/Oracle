@@ -390,4 +390,17 @@ STEP 2] 서브쿼리안의 SELECT절에서 STEP1의 별칭.*,ROWNUM 컬럼별칭
 
 STEP 3] 밖의 WHERE절에서 ROWNUM을 별칭한 이름으로 between a and b
 
---
+    SELECT * 
+    FROM (SELECT T.*, ROWNUM R FROM(SELECT * FROM emp ORDER BY sal DESC)T)
+    WHERE R BETWEEN 4 AND 6
+    
+    SELECT LAST_NAME || ' ' || FIRST_NAME name , SALARY, department_name, city
+    FROM(SELECT T.*,ROWNUM R FROM(SELECT * FROM employees ORDER BY salary desc)T)e
+    join departments d on e.department_id = d.department_id 
+    join locations l on d.location_id = l.location_id
+    WHERE R BETWEEN 11 and 20
+    
+    SELECT ename, sal, e.deptno, dname, hiredate
+    FROM(SELECT T.*,ROWNUM R FROM(select * from emp order by sal)T)e
+    join dept p on e.deptno = p.deptno
+    WHERE R between 6 and 10
