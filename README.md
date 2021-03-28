@@ -390,6 +390,8 @@ STEP 2] 서브쿼리안의 SELECT절에서 STEP1의 별칭.*,ROWNUM 컬럼별칭
 
 STEP 3] 밖의 WHERE절에서 ROWNUM을 별칭한 이름으로 between a and b
 
+
+혹시 top로 구해서 Not in 구하면 되는지,,
     SELECT * 
     FROM (SELECT T.*, ROWNUM R FROM(SELECT * FROM emp ORDER BY sal DESC)T)
     WHERE R BETWEEN 4 AND 6
