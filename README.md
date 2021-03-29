@@ -623,4 +623,45 @@ STEP 3] 밖의 WHERE절에서 ROWNUM을 별칭한 이름으로 between a and b
     join dept p on e.deptno = p.deptno
     WHERE R between 6 and 10
     
+# DCL
+ - 아래 작업은 DBA역할이 있는 최고 관리자(SYSTEM/SYS)로 접속해야 한다.
+
+1] 사용자 생성 및 암호 설정
+---
+ - 사용자는 DB에 엑세스하기 위해 시스템 권한이 필요하고 DB 개체의 내용을 조작하기 위해 개체 권한이 필요하다
+ - 시스템 권한의 종류는 200개 이상 개체권한은 28개
+ - 시스템 권한은 주로 DBA가 부여한다.(SYS/SYSTEM)
+ - DBA는 상급의 시스템권한을 부여한다.
+ - 역할
+    - DBA : 최고 권한
+    - connect : DB에 엑세스 할 수 있는 권한
+    - resource : 개체를 생성 할 수 있는 권한
+
+
+            //시스템 권한 확인
+            SELECT * FROM SYSTEM_PRIVILEGE_MAP
+            //개체 권한 확인
+            SELECT * FROM TABLE_PRIVILEGE_MAP
+
+            //생성
+            CREATE USER 아이디 IDENTIFIED BY 암호 // 사용자는 생성된 후 어떠한 권한도 가지지 못한다.
+            create user user02 identified by user02;
+            
+            //권한 부여
+            Grant 시스템 권한1,[시스템 권한2...] | 역할1, [역할2...]
+            to 사용자1,[사용자2...] | 역할1, [역할2...]
+            [With admin option] // 받은 시스템 권한을 다른 사용자에게 부여 할 수 있는 권한
+            
+            grant create session to user02; // 계정을 만들 수 있는 권한 부여 // 테이블 아직 만들 수 없음
+            grant create table to user02; // 테이블 만들 수 있는 권한?
+            alter user user02 quota 1m ON system;
+            
+            [With admin option] // 받은 시스템 권한을 다른 사용자에게 부여 할 수 있는 권ㄱ
+            [With admin option] // 받은 시스템 권한을 다른 사용자에게 부여 할 수 있는 권한
+
+
+
+    
+암호 서
+
 
