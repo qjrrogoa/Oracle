@@ -95,15 +95,85 @@
 
  - 테이블의 필드에 일련번호 부여
  - 테이블 생성 후 시퀀스(일련번호)를 따로 만들어야 한다.
+ - 테이블 하나 당 시퀀스 하나를 만들자
+ - DUAL : 출력을 위한 임시 테이블로 모든 사용자 계정이 가질 수 있다.
 
-      
+        create sequence 시퀀스명
+        [increment by 증가값]
+        [start with seed값]
+        [maxvalues n / minvalues n] 
+        [cycle / nocycle] // 무조건 1보다 커야함
+        // 최대 최소값을 도달한 후 계속 값을 생성할 지 여부 지정 (디폴트 노사이클)
+        [cache / nocache] // CACHE메모리에 오라클 서버가 SEQUENCE값을 할당하는가 여부 지정 (디폴트로 CACHE) 
+        // 캐쉬 기본 값이 20이라 maxvalues가 20보다 낮으면 오류다,
+        // 그래서 노캐쉬 하던가 사이클을 maxvalues보다 낮게 지정하면 된다.
+        
+        create sequence seq_exam1
+        increment by 5
+        start with 20
+        maxvalue 40
+        nocache
+        cycle;
+        //싸이클 5번 돌면 시퀀스 1로 간다,,  -> 노 사이클 해야함,,
+        
+        create sequence seq_exam2
+        increment by 5
+        start with 20
+        maxvalue 40
+        cache 2
+        nocycle;
+        // 40 넘어가면 종료
+        
+        
+        create sequence SEQ_bbs1
+        NOCACHE
+        NOCYCLE;
+        // 제일 깔끔
+        
+# 데이터 값 입력
+1]INSERT 문
+---
+        Insert into 테이블명 (컬럼1, 컬럼2, 컬럼n)
+        values(값1,값2,값n)
+        
+        desc 테이블명; // 구조 알 수 있다.
+        insert into dmltbl 
+        values(seq_dmltbl.NEXTVAL,'ID'||seq_dmltbl.NEXTVAL,20,default);
+        
+2]Update문
+---
+ - WHERE절 없으면 모든 행 다 바뀐다
+
+        update 테이블명
+        set 컬러명 = 바꿀 값
+        
+        update dmltbl
+        set age = 40, id = 'kosmo';
+        
+        update dmltbl 
+        set id='KIM', age = 20
+        where no=1;
+        
+3]Delete문
+---
+        delete 
+        from dmltbl
+        where no=5;
+        
+        delete dmltbl
+        where no >=2;
+        
+        
+        TRUNCATE table 테이블명 : 즉 테이블안에 있는 모든 데이터를 삭제한다.
+        (delete from 테이블 명과 같다, 속도는 빠르지만 복원 불가,,)
+        
 # DCL
 # select
 
 1]  || : 문장과 열 합칠 때
-  
-2]  '' : 문장
-  
+---
+2]  ' ' : 문장
+---
 3]  AS : 별칭 (생략 가능)
 ---
     SELECT ename || '의 연봉은 ' || sal
