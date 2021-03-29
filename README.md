@@ -3,7 +3,7 @@
 # DDL
 # TABLE
 
-1] 생성 방법
+1] create
 ---
     Create tabel 테이블명{
      컬러명1 자료형1 [not null],
@@ -137,6 +137,7 @@
         values(값1,값2,값n)
         
         desc 테이블명; // 구조 알 수 있다.
+        
         insert into dmltbl 
         values(seq_dmltbl.NEXTVAL,'ID'||seq_dmltbl.NEXTVAL,20,default);
         
@@ -167,6 +168,36 @@
         TRUNCATE table 테이블명 : 즉 테이블안에 있는 모든 데이터를 삭제한다.
         (delete from 테이블 명과 같다, 속도는 빠르지만 복원 불가,,)
         
+        
+# 뷰
+ - 물리적인 공간을 차지하지 않는다.
+ - 하나 또는 그 이상의 테이블로부터 생성된 가상의 테이블이다.
+ - DB의 선택적인 내용을 보여줄 수 있기 때문에 DB에 대한 엑세스 제한 기능 (보안 기능)
+ - 복작한 질의어를 통해 얻을 수 있는 결과를 간단한 질의어를 써 구할 수 있다.
+ - 하나의 테이블로 만든 VIEW에서는 DML문장을 수행 할 수 있지만 여러 테이블로 만든 VIEW에서는 DML문을 수행 할 수 없다. 단, UPDATE와 DELETE는 가능
+ - 뷰의 목적은 SELECT다.
+
+        create [or replace] view view명 // 별칭 하려면 ""로 감싸줘야한다.  [or replace] 같은 뷰 있으면 대체하겠다라는 뜻 
+        as
+        select 구문
+        [with read only] // 뷰를 읽기 전용으로
+        
+        //생성
+        create or replace view vw_emp("사원번호","이름","직무","입사일","부서코드")
+        as
+        select empno,ename,job, hiredate,deptno
+        from emp
+        order by sal;
+        
+        //삭제
+        drop view VW_EMP;
+        
+
+        
+   
+   
+   
+   
 # DCL
 # select
 
