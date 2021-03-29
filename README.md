@@ -136,7 +136,6 @@
         Insert into 테이블명 (컬럼1, 컬럼2, 컬럼n)
         values(값1,값2,값n)
         
-        desc 테이블명; // 구조 알 수 있다.
         
         insert into dmltbl 
         values(seq_dmltbl.NEXTVAL,'ID'||seq_dmltbl.NEXTVAL,20,default);
@@ -638,33 +637,48 @@ STEP 3] 밖의 WHERE절에서 ROWNUM을 별칭한 이름으로 between a and b
     - resource : 개체를 생성 할 수 있는 권한
 
 
-            //시스템 권한 확인
-            SELECT * FROM SYSTEM_PRIVILEGE_MAP
-            //개체 권한 확인
-            SELECT * FROM TABLE_PRIVILEGE_MAP
+           //시스템 권한 확인
+           SELECT * FROM SYSTEM_PRIVILEGE_MAP
+          //개체 권한 확인
+          SELECT * FROM TABLE_PRIVILEGE_MAP          
+          //사용자 목록 확인
+          SELECT username from dba_users             // system 계정에서 해야함
+          //사용자 구조
+          desc DBA_USERS
 
-            //생성
-            CREATE USER 아이디 IDENTIFIED BY 암호 // 사용자는 생성된 후 어떠한 권한도 가지지 못한다.
-            create user user03 identified by user03; //아이디 user03 비밀번호 user03
+          //생성
+          CREATE USER 아이디 IDENTIFIED BY 암호            // 사용자는 생성된 후 어떠한 권한도 가지지 못한다.
+          create user user03 identified by user03; //아이디 user03 비밀번호 user03
             
             
-            //권한 부여
-            Grant 시스템 권한1,[시스템 권한2...] | 역할1, [역할2...]
-            to 사용자1,[사용자2...] | 역할1, [역할2...]
-            [With admin option] // 받은 시스템 권한을 다른 사용자에게 부여 할 수 있는 권한
+          //권한 부여
+          Grant 시스템 권한1,[시스템 권한2...] | 역할1, [역할2...]
+          to 사용자1,[사용자2...] | 역할1, [역할2...]
+          [With admin option]                            // 받은 시스템 권한을 다른 사용자에게 부여 할 수 있는 권한
             
-            grant connect, resource to user03; //테이블을 만들 수 있는 권한
-            grant create view to user03; // 뷰를 만들 수 있는 권한
+          grant connect, resource to user03; //테이블을 만들 수 있는 권한
+          grant create view to user03;                  // 뷰를 만들 수 있는 권한
             
            
-           //수정 
-            alter user user03 identified by 1234; //비밀번호 1234 로 변경
+          //수정 
+          alter user user03 identified by 1234; //비밀번호 1234 로 변경
             
           //계정 lock 걸고 풀기
-          alter user user03 account lock; //lock
-          alter user user03 account unlock identified by user03 // lock 풀자마자 비밀번호 변경
+          alter user user03 account lock;                   //lock
+          alter user user03 account unlock identified by user03     // lock 풀자마자 비밀번호 변경
           
           
+          //다른 계정에서 테이블 DCL 사용할 수 있는 권한 
+          grant select, delete On scott.emp To user03;    //user03은 scott.emp 테이블 select,delete 할 수 있다.
+          
+          //삭제
+          drop user user04 cascade
+          
+          
+            
+          
+          
+          //다른 계정에서 테이블 DCL 사용할 수 있는 권한
           //다른 계정에서 테이블 DCL 사용할 수 있는 권한 
 234
 
