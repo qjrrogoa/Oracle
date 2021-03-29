@@ -1,14 +1,67 @@
 # Oracle
 
-# 기본
+# DDL
+# TABLE
 
-1] 
----
-DDL
-DML
-DCL
+1] 생성 방법
+  
+    Create tabel 테이블명{
+     컬러명1 자료형1 [not null],
+     컬러명2 자료형2 [not null]
+
+2] 테이블 이름 미 컬러 명명규칙
+  
+  - 문자로 시작한다
+  
+  - 30자 이내로 지정 한다
+  
+  - 대소문자를 구별하지 않는다
+
+  - 동일하 이름으 사용할 수 없다. 또하 예역어도 사용할 수 없다
+
+3] 테이블 제약 조건
+
+[1] 기본키(pk) (Not Null + Unique)
+
+  - 참조무결성을 유지하기 위해 제약조긴이다
+
+  - 하나의 테이블에느 하나의 pkaks whswogksek.
+
+  - PK로 설정되면 그 칼럼은 값이 중복되거나 NULL을 허용하지 않는다.
+
+[2] NOT NULL
+
+  - NULL값을 절대로 허용하지 않는 컬럼
+  
+[3] UINQUE 
+
+  - 중복을 허용하지 않는다. NULL은 허용한다(여러번)
+
+[4] DEFAULT
+
+[5] FK 
+
+  - 컬럼 옆에 
+  
+  - creat문 마지막에
+
+[6] Check
+
+  - WHERE절 이라고 생각하면 된다.
+    
+        create table chktbl(
+        col1 number primary key,
+        col2 Char(1) constraint chk_chktbl_col2 check(col2 IN ('F','M')),
+        col3 number check(col3 >= 100 and col3 <= 200),
+        col4 date check(col4 >= To_DATE('2021-02-24' and col4 <= TO_DATE('2021-08-23)),
+        col5 char(14) check(regexp_like(col5,'^[0-9]{6}-[1-4]{7}$');
+
+[7] 테이블 변경
+
+  - 안하는게 낫다,
 
 
+# DCL
 # select
 
 1]  || : 문장과 열 합칠 때
@@ -406,3 +459,5 @@ STEP 3] 밖의 WHERE절에서 ROWNUM을 별칭한 이름으로 between a and b
     FROM(SELECT T.*,ROWNUM R FROM(select * from emp order by sal)T)e
     join dept p on e.deptno = p.deptno
     WHERE R between 6 and 10
+    
+
