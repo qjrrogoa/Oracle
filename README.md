@@ -189,14 +189,40 @@
         from emp
         order by sal;
         
+         create or replace view VW_emp_dept
+        as
+        select E.*,dname,loc
+        from emp E join dept d on e.deptno = d.deptno
+        order by sal;
+        
+        
         //삭제
         drop view VW_EMP;
         
-
+        drop view vw_emp_dept;
         
-   
-   
-   
+# 인덱스
+
+- 행의 검색 속도를 향상 시킬 수 있는 개체
+- 인덱스를 명시적 (Create index) 또는 자동적으로 (primary key, unique key)로 생성 할 수 있다.
+- 컬럼에 대한 인덱스가 없으면 한 테이블 전체를 검색, 즉 인덱스는 쿼리의 성능을 향상 시키는 것이 목적
+- Insert/update/delete가 많은 컬럼에 대해서 index를 되도록이면 설정하지 말아라
+- 인덱스가 많은 것이 항상 좋은것은 아니다, 왜냐하면 인덱스를 가진 테이블에 대한 DML작업은 인덱스도 갱신되여 함을 의미하기 때문
+- 인덱스는 수정 불가 수정시에는 삭제후 다시 생성
+
+- 어느 컬럼에 인덱스를 설정하는가?!
+    - WHERE조건이나 조인 조건에서 자주 사용되는 컬럼
+    - 광범위한 값을 포함하는 컬럼
+    - 많은 null값을 포함하는 칼럼
+    - 테이블에 자료의 양이 적거나 자주 갱신되는 테이블은 오히려 인덱스를 걸지 말아라
+           
+          //생성
+          Create index idx_emp on emp(deptno,sal,comm)  //조인이 많아서, 범위 넓어서, null이 많아서
+          
+          //삭제
+          drop index idx_emp;
+       
+
    
 # DCL
 # select
