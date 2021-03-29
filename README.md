@@ -4,13 +4,13 @@
 # TABLE
 
 1] 생성 방법
-  
+---
     Create tabel 테이블명{
      컬러명1 자료형1 [not null],
      컬러명2 자료형2 [not null]
 
 2] 테이블 이름 미 컬러 명명규칙
-  
+---
   - 문자로 시작한다
   
   - 30자 이내로 지정 한다
@@ -20,7 +20,7 @@
   - 동일하 이름으 사용할 수 없다. 또하 예역어도 사용할 수 없다
 
 3] 테이블 제약 조건
-
+---
 [1] 기본키(pk) (Not Null + Unique)
 
   - 참조무결성을 유지하기 위해 제약조긴이다
@@ -45,8 +45,8 @@
   
   - creat문 마지막에
 
-[6] Check
-
+4] Check
+---
   - WHERE절 이라고 생각하면 된다.
     
         create table chktbl(
@@ -56,11 +56,47 @@
         col4 date check(col4 >= To_DATE('2021-02-24' and col4 <= TO_DATE('2021-08-23)),
         col5 char(14) check(regexp_like(col5,'^[0-9]{6}-[1-4]{7}$');
 
-[7] 테이블 변경
-
+5] 테이블 변경
+---
   - 안하는게 낫다,
 
+  - 테이블 구조와 데이터는 그대로 복사되지만, 제약조건(pk,fk,unique등)은 복사가 안된다.
 
+        Create table emp_copy
+        as 
+        select empno, ename, sal, job, hiredate, deptno
+        from emp
+
+6] Alter
+---
+  - 새로운 칼럼, 제약조건 추가
+
+        Alter Table 테이블명 Add 컬럼명 자료형 Not Null    //가장 위험하다 칼럼 not null 하려면 그 행 다 지워야 한다,,
+        alter table emp_copy add comm number(6,2)
+        alter table emp_copy add constraint PK_emp_copy primary key(empno)
+        alter table emp_copy drop constraint PK_emp_copy;
+        alter table emp_copy drop column comm;
+        alter table emp_copy modify empno NUMBER(2)  // 컬럼 자료형 바꿀때 반드시 더 큰 자료형으로 바꿔야 한다. 
+        원본 데이터는 number(4) 2로바꾸면 오류 6을 바꾸면 성공
+        alter table emp_copy rename column sal to salary // sal -> salar로 칼럼 명 변경
+        rename emp_copy to EMP2    // 테이블 명 변경
+ 
+ 7] DROP 
+ ---
+  - 부모 테이블은 삭제가 안된다 (삭제하려면 함수 다름)
+
+        Drop table emp2 // emp2 삭제
+        Flashback table emp2 to before drop // 삭제한 테이블 복원
+        Drop table emp2 pudge // 복원 불가능 완전 삭제
+        
+        Drop table 부모테이블 Cascade constraint // 부모 테이블 삭제
+        
+# 시퀀스
+
+ - 테이블의 필드에 일련번호 부여
+ - 테이블 생성 후 시퀀스(일련번호)를 따로 만들어야 한다.
+
+      
 # DCL
 # select
 
