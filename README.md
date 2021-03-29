@@ -645,23 +645,27 @@ STEP 3] 밖의 WHERE절에서 ROWNUM을 별칭한 이름으로 between a and b
 
             //생성
             CREATE USER 아이디 IDENTIFIED BY 암호 // 사용자는 생성된 후 어떠한 권한도 가지지 못한다.
-            create user user02 identified by user02;
+            create user user03 identified by user03; //아이디 user03 비밀번호 user03
+            
             
             //권한 부여
             Grant 시스템 권한1,[시스템 권한2...] | 역할1, [역할2...]
             to 사용자1,[사용자2...] | 역할1, [역할2...]
             [With admin option] // 받은 시스템 권한을 다른 사용자에게 부여 할 수 있는 권한
             
-            grant create session to user02; // 계정을 만들 수 있는 권한 부여 // 테이블 아직 만들 수 없음
-            grant create table to user02; // 테이블 만들 수 있는 권한?
-            alter user user02 quota 1m ON system;
+            grant connect, resource to user03; //테이블을 만들 수 있는 권한
+            grant create view to user03; // 뷰를 만들 수 있는 권한
             
-            [With admin option] // 받은 시스템 권한을 다른 사용자에게 부여 할 수 있는 권ㄱ
-            [With admin option] // 받은 시스템 권한을 다른 사용자에게 부여 할 수 있는 권한
-
-
-
-    
-암호 서
+           
+           //수정 
+            alter user user03 identified by 1234; //비밀번호 1234 로 변경
+            
+          //계정 lock 걸고 풀기
+          alter user user03 account lock; //lock
+          alter user user03 account unlock identified by user03 // lock 풀자마자 비밀번호 변경
+          
+          
+          //다른 계정에서 테이블 DCL 사용할 수 있는 권한 
+234
 
 
