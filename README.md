@@ -1288,8 +1288,7 @@ STEP 3] 밖의 WHERE절에서 ROWNUM을 별칭한 이름으로 between a and b
         from dual;
         // SMO
         
- - LENGTHB('문자열') : 문자열 비트 길이)
- - 
-7] LENGTH
+        select ename,RPAD(substr(ename,1,1),length(ename),'*')
+        from emp;
        
        
