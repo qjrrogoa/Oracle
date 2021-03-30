@@ -675,9 +675,89 @@ STEP 3] 밖의 WHERE절에서 ROWNUM을 별칭한 이름으로 between a and b
           drop user user04 cascade
           
           
-            
           
-          
+# PL/SQL
+ - 프로그래밍 언어의 특성을 수용한 SQL의 확장
+ - SQL의 데이터 조작(DML)과 질의문 블락 구조에 절차적 단위(IF, FOR, WHILE, LOOP등)로 된 커맨드를 포함 할 수 있음
+ - PL/SQL블락내에서 한 문장이 종료할때마나 세미콜론(;)을 붙인다.
+ - END뒤에 세미콜론(;)을 붙여 하나의 BLOCK이 끝났다는 것을 명시
+ - 마지막에 반드시 / 를 붙여야 한다.
+ - -- 한줄 주석
+ - /* 여러줄 주석
+
+1] PL/SQL 구조
+---
+- 변수명 [CONSTANT] 자료형 [NOT NULLL] [ := 초기값 | DEFAULT 초기값 ];
+- 한 라인에 하나의 식별자만 가능
+- 상수선언에서 CONSTANT는 자료형보다 먼저 기술
+- 대소문자를 구분하지 않는다.
+
+[PL:SQL](https://user-images.githubusercontent.com/79241184/112919510-364fca80-9142-11eb-98e0-b2d73956ac3d.png)
+
+        DECLARE
+            변수 및 상수, CURSOR, EXCEPTION 선언 등;         // 선언부 - 선택 사항
+        BEGIN
+            SQL, Pl/SQL문;                              // 실행부 - 필수 사항
+
+            EXCEPTION
+            BEGIN
+
+            예외처리;                                     // 예외처리부 - 실행 사항
+
+            END;
+
+        END;
+        /                                               // 반드시 붙여라!     
+
+[1] 바인드 변수 선언
+ - 호스트 환경에서 선언 된 변수
+ - PL/SQL 프로그램의 나부나 외부에서 전달하기 위해서 사용
+ - PL/SQL문이 프로시저나 함수 안에 잇지 않는다면 호스트에서 선언된 변수를 PL/SQL문장에서 참조 할 수 있다.
+ - 호스트 변수와 PL/SQL내에서의 변수를 구분하기 위해 호스트 변수 앞에 콜론(:)을 붙인다.
+ - 선언만 할 수 있고 호스트 변수는 선언시에 값을 할당 못한다.
+ 
+        Var 변수명 자료형
+        DECLARE
+        BEGIN
+        : 변수 := 300;
+        end;
+        /
+        [1]
+        var num number
+        BEGIN
+        :num := 14;
+        end;
+        /
+
+        print num
+
+        select :num from dual;
+
+        [2]
+        var str varchar2(10)
+        declare
+        fnum number :=1;
+        snum number :=10;
+        begin
+        :num := fnum + snum;
+        :str := '합은 ' || :num;
+        end;
+        /
+        
+        print num str;
+
+        select :num, :str 
+        from dual;
+        
+        print fnum;                 // 오류
+
+[2] SELECT문
+ - into절 사용해야 한다.
+ - 무조건 레코드가 1개 나와야 한다. 아니면 오류!
+
+        
+        
+        
           //다른 계정에서 테이블 DCL 사용할 수 있는 권한
           //다른 계정에서 테이블 DCL 사용할 수 있는 권한 
 234
