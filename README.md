@@ -140,6 +140,24 @@
         insert into dmltbl 
         values(seq_dmltbl.NEXTVAL,'ID'||seq_dmltbl.NEXTVAL,20,default);
         
+        
+        accept id prompt '삭제할 아이디'
+        declare 
+        id_ MEMBER.id%TYPE := '&id';
+        begin
+            delete MEMBER
+            where id = id_;
+        end;
+        /
+        
+        accept id prompt '삭제할 아이디'
+        declare 
+        id_ MEMBER.id%TYPE := '&id';
+        begin
+            delete MEMBER
+            where id like '%' || id_ || '%';
+        end;
+        /
 2]Update문
 ---
  - WHERE절 없으면 모든 행 다 바뀐다
@@ -715,6 +733,7 @@ STEP 3] 밖의 WHERE절에서 ROWNUM을 별칭한 이름으로 between a and b
  - PL/SQL문이 프로시저나 함수 안에 잇지 않는다면 호스트에서 선언된 변수를 PL/SQL문장에서 참조 할 수 있다.
  - 호스트 변수와 PL/SQL내에서의 변수를 구분하기 위해 호스트 변수 앞에 콜론(:)을 붙인다.
  - 선언만 할 수 있고 호스트 변수는 선언시에 값을 할당 못한다.
+ - dbms_output.put_line 사용하려면 set serverout ON; 해야한다.
  
         Var 변수명 자료형
         DECLARE
@@ -755,11 +774,297 @@ STEP 3] 밖의 WHERE절에서 ROWNUM을 별칭한 이름으로 between a and b
  - into절 사용해야 한다.
  - 무조건 레코드가 1개 나와야 한다. 아니면 오류!
 
+        var dname varchar2(14)
+        var loc varchar2(13)
+        declare
+        p_deptno dept.deptno%type :=30;
+        begin 
+        select dname, loc into :dname, :loc
+        from dept
+        where deptno = p_deptno;
+        end;
+        /
         
+        print dname loc;
         
+        select :dname, :loc
+        from dual;
+ 
+[3] if문
+           
+        if condition(조건식) then
+            statements;
+        [elsif condition then statemensts;]
+        [else statements;]
         
-          //다른 계정에서 테이블 DCL 사용할 수 있는 권한
-          //다른 계정에서 테이블 DCL 사용할 수 있는 권한 
-234
+        end if;
+        
+        var result nvarchar2(10)
+        declare
+        str nvarchar2(10) := 'JAVA';
+        begin
+            if str = 'Java' then
+            begin
+                dbms_output.put_line('Java');
+                :result := 'Java';
+            end;
+
+            elsif str ='JaVa' then
+            begin
+                dbms_output.put_line('JaVa');
+                :result := 'JaVa';
+            end;
+
+            else
+                 dbms_output.put_line('JAVA');
+                :result := 'JAVA';
+            end if;
+        end;
+        /
+
+        print result;
+
+- 사용자에게 값을 입력 받기    
+
+    accept p_num prompt '숫자를 입력하세요:' 
+    
+    &주의해라
+    
+        accept p_num prompt '숫자를 입력하세요:'
+        declare 
+        num number := &p_num;
+        begin
+            DBMS_OUTPUT.put_line('입력한 숫자는 ' || num);
+            if mod(num,2) = 0 then
+                DBMS_OUTPUT.put_line(num ||'은 짝수다');
+            else
+                DBMS_OUTPUT.put_line(num ||'은 홀수다');
+            end if;
+        end;
+        /
+        
+        accept akor prompt '국어점수?'
+        accept aeng prompt '영어점수?'
+        accept amath prompt '수학점수?'
+        declare
+            kor number(3) := &akor;
+            eng number(3) := &aeng;
+            math number(3) := 0;
+        begin
+            dbms_output.put_line('성적 출력하기');
+            if ((kor+eng+&amath)/3) >= 90 then
+                 dbms_output.put_line('A');
+            elsif ((kor+eng+&amath)/3) >= 80 then
+                 dbms_output.put_line('B');
+            elsif ((kor+eng+&amath)/3) >= 70 then
+                 dbms_output.put_line('C');
+            elsif ((kor+eng+&amath)/3) >= 60 then
+                 dbms_output.put_line('D');
+            else 
+                 dbms_output.put_line('F');
+            end if;
+        end;
+        /
+        
+        accept num prompt '숫자 입력'
+        begin
+        if(mod(&num,3)=0 and mod(&num,5)=0) then
+            dbms_output.put_line('3과 5의 공배수');
+        elsif(mod(&num,3)=0) then
+            dbms_output.put_line('3의 배수');
+        elsif(mod(&num,5)=0) then
+            dbms_output.put_line('5의 배수');
+        else 
+            dbms_output.put_line('3과 5의 배수가 아니다');
+        end if;
+        end;
+        /
+
+        declare
+        i number := 1;
+        j number;
+        begin
+            while i <= 9 loop
+                j:=2;
+                while j <=9 loop
+                    dbms_output.put(j || '  *  ' || i || ' = ' || j*i|| '   ');
+                    j := j+1;
+                end loop;
+                dbms_output.new_line;
+                i := i+1;
+            end loop;
+        end;
+        /
+
+[4] Loop문
+
+ - do while문하고 똑같다
+
+        Loop
+        
+            statement1;
+            statement2;
+            Exit [when condition];
+            
+        end loop;
 
 
+        begin
+            loop
+                dbms_output.put_line('Hello World');
+                exit;
+            end loop;
+        end;
+        /
+        
+        accept num prompt '끝 숫자 입력하세요'
+        declare
+            hap number := 0;
+            num number := &num;
+        begin
+            loop
+                hap := hap+num;
+                num := num -1;
+                exit when num = 0;
+            end loop;
+            dbms_output.put_line(&num||'까지의 누적합:'||hap);
+        end;
+        /
+        
+        accept snum prompt '시작 숫자 입력하세요'
+        accept enum prompt '끝 숫자 입력하세요'
+        declare
+            hap number := 0;
+            snum number := &snum;
+        begin
+        if &snum >= &enum then
+            dbms_output.put_line('시작값이 종료값보다 크거나 같아요');
+        else 
+                 loop
+                    hap := hap+snum;
+                    snum := snum+1;
+                    exit when &enum < snum;
+                end loop;
+                dbms_output.put_line(&snum||'부터'||&enum||'까지의 누적합:'||hap);
+        end if;
+        end;
+        /
+        
+[5] for문
+ - 인덱스 터는 자도응로 선언된 변수
+ - for문은 1씩밖에 증가 못한다.
+ - 항상 초기값이 종료값보다 작아야한다.초기값이 더 크면 반복하지 않는다.
+
+        begin
+            for i in 1 ..10 loop
+                dbms_output.put_line(i);
+            end loop;
+        end;
+        /
+        
+        accept snum prompt '시작 숫자 입력하세요'
+        accept enum prompt '끝 숫자 입력하세요'
+        declare
+            hap number := 0;
+        begin
+            for k in &snum .. &enum loop
+                if mod(k,2) = 0 then
+                    hap:= hap+k;
+                end if;
+            end loop;
+            dbms_output.put_line(&snum||'부터'||&enum||'까지 짝수의 합'||hap);
+        end;
+        /
+        
+ - put하면 줄 띄우기 안하지만 반드시 줄 띄우기 라인 하나 만들어야 실행된다.
+ 
+        begin
+            dbms_output.put('A');
+            dbms_output.put('가');
+            dbms_output.new_line;
+        end;
+        
+        
+        begin
+        for k in 1..4 loop
+            for j in 1..4 loop
+                if k=j then
+                    dbms_output.put('1 ');
+                else
+                    dbms_output.put('0 ');
+                end if;
+            end loop;
+                dbms_output.New_line;
+        end loop;
+        end;
+        /
+        
+       
+        begin
+        for i in 1..9 loop
+            for j in 2..9 loop
+                dbms_output.put('  '||j || '  *  ' || i || '  =  ' || i*j);
+            end loop;
+            dbms_output.New_line;
+        end loop;
+        end;
+        /
+        
+        create table member(
+        id varchar2(10) primary key,
+        pwd varchar2(10) not null,
+        name nvarchar2(10) not null,
+        regidate date default sysdate);
+
+
+        accept cnt prompt '레코드 수 입력'
+        begin
+            for i in 1 .. &cnt loop
+                insert into member(id,pwd,name)
+                values('GA' ||i,'1234','가길동'||i);   
+        end loop;
+        end;
+        /
+
+[6] while문
+
+        declare
+        hap number := 0;
+        i number := 1;
+        begin
+            while i <= 10 loop
+                hap := hap + i;
+                i:=i+1;
+            end loop;
+            dbms_output.put_line('1부터 10까지 누적 합:'||hap);
+        end;
+        /
+        
+        accept num prompt '숫자 입력'
+        declare
+            num number := &num;
+        begin
+            while true loop
+                dbms_output.put_line('num은' || num);
+                num := num -1;
+                exit when num = 0;
+            end loop;
+        end;
+        /
+        
+[7] SQL%FOUND
+ - 영향 받은 행의 수?
+        
+        accept id prompt '삭제할 아이디'
+        declare 
+        id_ MEMBER.id%TYPE := '&id';
+        begin
+            delete MEMBER
+            where id like '%' || id_ || '%';
+            if SQL%found then
+                dbms_output.put_line(SQL%ROWCOUNT||'행이 삭제 되었어요');
+            else 
+                dbms_output.put_line('그런 아이디는 없어요 : ' || SQL%rowcount);
+            end if;
+        end;
+        /
