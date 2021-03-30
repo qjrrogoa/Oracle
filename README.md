@@ -1191,6 +1191,7 @@ STEP 3] 밖의 WHERE절에서 ROWNUM을 별칭한 이름으로 between a and b
         // null인 값 모두 -1로 반환
 
 2] LOWER
+---
  - LOWER('문자열') : 영문자를 소문자로 변환
 
         select lower('HELLO WORLD')
@@ -1200,6 +1201,7 @@ STEP 3] 밖의 WHERE절에서 ROWNUM을 별칭한 이름으로 between a and b
         from emp;
 
 3] UPPER
+---
  - UPPER('문자열') : 영문자를 대문자로 변환
 
         select UPPER('hello world')
@@ -1209,14 +1211,85 @@ STEP 3] 밖의 WHERE절에서 ROWNUM을 별칭한 이름으로 between a and b
         from emp;
         
 4] initcap
+ ---
  - initcap('문자열') : 첫 글자만 대글자로 변경
 
-        select ename, initcap(ename), job, init(job)
+        select ename, initcap(ename), job, initcap(job)
         from emp;
 
-3] 
-   
-경우 ㄷ  
-  
+5] concat
+---
+ - concat('문자열','문자열') : 문자열 연결 
+
+        select concat('ORACLE','JAVA')
+        from dual;
+
+6] LENGTH() 
+--- 
+ - LENGTH('문자열') : 문자열 길이
+
+        select length('자바')
+        from dual;
+
+7] LENGTHB
+---
+ - LENGTHB('문자열') : 문자열 비트 길이
+
+        select lengthb('자바')
+        from dual;
+        // 6
+        
+8] LPAD
+---
+ - LPAD('문자열',전체 자리수,'채울 문자열') : 좌측을 지정한 값으로 채운다
+
+        select LPAD('HELLO',10,'X')
+        from dual
+        // HELLOXXXXX
+        
+9] RPAD
+---
+ - RPAD('문자열',전체 자리수,'채울 문자열') : 우측을 지정한 값으로 채운다
+    
+        select RPAD('HELLO',10,'X')
+        from dual
+        // XXXXXHELLO
+
+10] INSTR
+---
+ - INSTR('문자열','찾을 문자열') : 찾은 문자열의 인덱스 변환, 인덱스는 1부터 시작
+ - like 사용하는것보다 속도면에서 우수하다.
+ - 없으면 0 반환
+
+        select instr('ABCDEFG','DE') 
+        from dual;
+        // 4
+        
+        select ename
+        from emp
+        --where ename like 'S%';
+        where instr(upper(ename),'S') =1;
+        
+        select ename
+        from emp
+        --where ename like '%S';
+        where instr(upper(ename),'S') =length(ename);
+        
+        select ename
+        from emp
+        --where ename like '%%S';
+        where instr(upper(ename),'S') != 0;
+        
+11] SUBSTR
+---
+ - SUBSTR('문자열',시작인덱스,길이) : 문자열에서 시작인덱스부터 길이만큼 가져옴, 인덱스는 1부터
+ 
+        select substr('kosmo',3,3)
+        from dual;
+        // SMO
+        
+ - LENGTHB('문자열') : 문자열 비트 길이)
+ - 
+7] LENGTH
        
        
