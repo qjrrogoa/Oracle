@@ -1068,3 +1068,155 @@ STEP 3] 밖의 WHERE절에서 ROWNUM을 별칭한 이름으로 between a and b
             end if;
         end;
         /
+
+[8] 예외처리
+
+ - Exception : PL/SQl에서 발생하는 ERROR
+ - ORACLE Server 에러가 발생하면 이와 관련된 EXCEPTION이 자동 발생
+ 
+        accept id prompt '아이디 입력'
+        declare
+            name_ MEMBER.name%type;
+            id_ MEMBER.id%type :='&id';
+        begin
+            --select id into id_ from member;
+            select id,name
+            into id_, name_
+            from member
+            where id = id_;
+            DBMS_output.put_line('이름:' || name_);
+            DBMS_output.put_line('이름:' || id_);
+
+
+        exception -- 예외 처리부
+        when TOO_MANY_ROWS then 
+            dbms_output.put_line('여러개의 레코드가 검색되었어요');
+        when NO_DATA_FOUND then
+            dbms_output.put_line(ID_ ||'로 검색된 회원이 없어요.  ');
+        when others then
+            dbms_output.put_line('에러번호'||sqlcode);
+            dbms_output.put_line('에러메시지'||sqlerrm);
+        end;
+        /
+        
+        
+        accept num prompt '숫자 입력?'
+        declare
+            -- 변수 선언
+            num varchar2(20);
+            -- 예외 선언
+            not_number exception;
+            pragma exception_init(not_number,-01722);
+        begin
+            select 10 + '&num'
+            into num
+            from dual;
+            dbms_output.put_line('당신의 10년 후 나이:' || num);
+            --예외 처리부
+            Exception
+            when not_number then
+                dbms_output.put_line('나이는 숫자만');
+            when others then
+                dbms_output.put_line('오류 발생'||SQLERRM);
+        end;
+        /
+        
+        accept num prompt '숫자 입력?'
+        declare
+            -- 예외 선언
+            even_number exception;
+
+        begin
+            if mod('&num',2)=0 then
+                raise even_number;
+            end if;
+            dbms_output.put_line('&num'||'는 홀수');
+            --예외 처리부
+            Exception
+            when even_number then
+                dbms_output.put_line('짝수는 안돼요');
+            when others then
+                dbms_output.put_line('오류 발생'||SQLERRM);
+        end;
+        /
+        
+[9] 트랜잭션
+ - 일련의 작업에서 하나의 작업이라도 실패한다면 모든 작업을 취소 시킨다.
+ - 일련의 작업이 정상적으로 끝나면 COMMIT한다.
+ - 자동 COMMIT이 일어나는 경우
+    - DDL/DCL문장 완료시 (create/alter/drop/grant/revoke)
+    - SQL*PLUS 정상 종료시
+ - 자동 ROLLBACK이 일어나는 경우
+    - SQL*PLUS 비정상 종료시 혹은 시스템 실패 시
+
+
+
+            select * from member;
+            begin
+            -- 수정 작업
+            update member
+            set name='코스모2'
+            where id = 'GA3';
+
+            --  삭제 작업
+            delete member
+            where id = 'kosmo';
+
+            -- 입력 작업
+            insert into member(id,pwd,name) 
+            values('dfasdafsdfa',1234,'한소인');
+            commit;
+            dbms_output.put_line('일련의 작업(트랜잭션)이 성공했어요');
+
+            exception
+            when others then
+                rollback;
+                dbms_output.put_line('모든 작업이 취소되었어요');
+
+            end;
+            /
+
+
+
+# 주요 내장 함수
+ - 무조건 값을 반환한다.
+ 
+1] NVL
+---
+ - NVL(컬럼명, NULL인 경우 대체할 값)
+
+        select enmae, job, NVL(comm,-1) comm
+        from emp;
+        
+        // null인 값 모두 -1로 반환
+
+2] LOWER
+ - LOWER('문자열') : 영문자를 소문자로 변환
+
+        select lower('HELLO WORLD')
+        from dual;
+        
+        select lower(ename), ename
+        from emp;
+
+3] UPPER
+ - UPPER('문자열') : 영문자를 대문자로 변환
+
+        select UPPER('hello world')
+        from dual;
+        
+        select Upper(lower(ename)), ename
+        from emp;
+        
+4] initcap
+ - initcap('문자열') : 첫 글자만 대글자로 변경
+
+        select ename, initcap(ename), job, init(job)
+        from emp;
+
+3] 
+   
+경우 ㄷ  
+  
+       
+       
