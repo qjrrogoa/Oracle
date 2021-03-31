@@ -1439,7 +1439,106 @@ STEP 3] 밖의 WHERE절에서 ROWNUM을 별칭한 이름으로 between a and b
     end salary, sal
     from emp;
 
+    select LAST_NAME, RPAD(substr(email,1,1),length(email),'*') email,
+    case
+    when salary >= 10000 then '고액 연봉'
+    when salary >= 5000 then '중간'
+    else '보통'
+    end 등급
+    ,to_char(salary,'$999,999') salary
+    ,to_char(hire_date,'yyyy"년"mm"월"dd"일"') hire_date
+    from employees
+    where instr(last_name,'t') = length(last_name);
 
+# CURSUR
+ - select 문장에 의해 여러행이 RETURN되는 경우 각 행에 접근하기 위한 것
 
+1] CURSOR 문법
+---
+        CURSOR 커서명 IS
+            SELECT문장 ----- DECLARE부에서 한다
+            (INTO절이 없는 SELECT문)
+       
+            OPEN 커서명
+            
+            FETCH 커서명 INTO{variable1[,variable2,...]};
+            
+            CLOSE 커서명
+            
+            
+            
+            accept deptno prompt '부서코드 입력'
+            declare
+                --커서 정의
+                CURSOR mycursor is
+                select ename,trim(to_char(sal,'$99,999')) sal, dname,loc
+                from emp e join dept d on e.deptno= d.deptno
+                where e.deptno = &deptno;
+                --변수 정의
+                ename_ emp.ename%type;
+                sal_ varchar2(10);
+                dname_ dept.dname%type;
+                loc_ dept.loc%type;
+            begin
+                --커서 오픈
+                open mycursor;
 
+                --FETCH하기
+                fetch mycursor 
+                into ename_,sal_,dname_,loc_;
 
+                while mycursor%found loop
+                    --출력
+                    dbms_output.put_line(ename_ || ' : ' || sal_ || ' : ' || dname_ || ' : ' || loc_);
+                    --FETCH하기
+                     fetch mycursor 
+                     into ename_,sal_,dname_,loc_;
+                end loop;
+                --커서 닫기
+                close mycursor;
+            end;
+            /
+            
+# FUNTION
+
+ - 다른 계정에 함수 실행권한 주기
+    - grant execute on 소유계정.함수명 to 부여받는 계정;
+    - grant execute on scott.get to hr;
+
+            create or replace function getsum(num1 number, num2 in number)
+            --반환타입 정의
+            return number  --자리수 지정, 세미콜론 X
+            --함수 시작
+            is
+            --변수 선언
+                hap number :=0;
+            begin
+                for i  in num1 .. num2 loop
+                    hap := hap + i;
+                end loop;
+             return hap;
+            end;
+            /
+
+            --호출 2가지 방법
+            select getsum(1,10)
+            from dual;
+
+            var hap number;
+            exec :hap := getsum(1,10)
+            print hap;
+
+            create or replace function get(en_ varchar2)
+            return varchar2
+            IS
+            begin
+               return  RPAD(substr(en_,1,1),length(en_),'*');
+            end;
+            /
+
+            var ename_ varchar2;
+            exec :ename_ := get('abcde')
+            print ename_;
+
+            select ename,get(ename)
+            from emp;
