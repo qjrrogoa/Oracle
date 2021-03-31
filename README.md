@@ -1505,6 +1505,9 @@ STEP 3] 밖의 WHERE절에서 ROWNUM을 별칭한 이름으로 between a and b
     - grant execute on 소유계정.함수명 to 부여받는 계정;
     - grant execute on scott.get to hr;
 
+
+
+
             create or replace function getsum(num1 number, num2 in number)
             --반환타입 정의
             return number  --자리수 지정, 세미콜론 X
@@ -1528,6 +1531,8 @@ STEP 3] 밖의 WHERE절에서 ROWNUM을 별칭한 이름으로 between a and b
             exec :hap := getsum(1,10)
             print hap;
 
+
+
             create or replace function get(en_ varchar2)
             return varchar2
             IS
@@ -1542,6 +1547,9 @@ STEP 3] 밖의 WHERE절에서 ROWNUM을 별칭한 이름으로 between a and b
 
             select ename,get(ename)
             from emp;
+            
+            
+            
             
             
             create or replace function getday(en_ date)
@@ -1559,10 +1567,126 @@ STEP 3] 밖의 WHERE절에서 ROWNUM을 별칭한 이름으로 between a and b
 
 
 # 저장 프로시져
- - 프로시저는 RETURN문이 없다 OUT 매개변수로 값을 RETURN한다.
+ - 프로시저는 RETURN문이 없다. OUT 매개변수로 값을 RETURN한다.
  - 저장 프로시져의 장점
     - 매우 좋은 성능 (여러명이 사용할 때 SQL문은 할때마다 parsing, 프로시져는 처음에 한번 만)
     - 보안성을 높일 수 있음
     - 다양한 처리가 가능
     - 네트웍의 부하를 줄일 수 있음
  - 무조건 EXECUTE해야한다.
+
+        //입력값 받는 프로스져
+        create or replace procedure SP_INS_MEMBER(
+            id_ member.id%type,
+            pwd member.pwd%type,
+            name_ member.name%type,
+            RTVAR out NVARCHAR2
+        )
+        IS
+        begin
+            insert into member(id,pwd,name)
+            values(id_,pwd_,name_);
+
+            if SQL%FOUND then 
+                RTVAR := '입력 성공';
+                COMMIT;
+            end if;
+
+            exception
+                when others then
+                    ROLLBACK;
+                    RTVAL := '입력실패 - 중복키거나 입력 값이 크다';
+        end;
+        /
+        
+        VAR RTVAL NVARCHAR2(50)
+
+        EXEC SP_INS_MEMBER('KIM','1234','김길동',:RTVAL)
+        
+        
+        
+
+        PRINT RTVAL
+
+        SELECT * FROM MEMBER
+        
+        
+        // 수정하는 프로시져
+        create or replace procedure SP_UP_MEMBER(
+        ID_ IN MEMBER.ID%TYPE,
+        PWD_ MEMBER.PWD%TYPE,
+        NAME_ MEMBER.NAME%TYPE,
+        RTVAL OUT  Char
+        )
+        IS
+        BEGIN
+            update member
+            set pwd = pwd_, name = name_
+            where id = id_;
+
+         IF SQL%FOUND THEN
+            RTVAL :='SUCCESS';
+            COMMIT;
+        else 
+            RTVAL := 'FAIL : NOT FOUND ID : ' || id_;
+        END IF;
+
+        EXCEPTION
+            WHEN OTHERS THEN
+                ROLLBACK;
+                RTVAL :='FAIL : TOO MUCH VALUE';
+        END;
+        /
+
+        var RT_VAR CHAR(50);
+        exec SP_UP_MEMBER('KIM1','9999','가길동',:RT_VAR);
+        print rt_var;
+
+        select *
+        from member;
+        
+        
+        create or replace procedure SP_DEL_MEMBER(
+        ID_ IN MEMBER.ID%TYPE,
+        AFFECTED OUT  NUMBER
+        )
+        is
+        begin
+            delete member
+            where id =id_;
+
+        if SQL%FOUND then
+            DBMS_OUTPUT.put_LINE(ID_||'가 삭제되었어요');
+            AFFECTED := SQL%ROWCOUNT;
+            commit;
+        else 
+             DBMS_OUTPUT.put_LINE(ID_||'가 존재하지 않아요');
+             AFFECTED := -1;
+           end if;
+
+         EXCEPTION
+            WHEN OTHERS THEN
+                ROLLBACK;
+               DBMS_OUTPUT.put_LINE('자식이 참조하고 있어요');
+                AFFECTED := -2;
+        end;
+        /
+        
+        create table bbs(
+        No number primary key,
+        ID varchar2(10) references member(id),
+        title nvarchar2(50) not null,
+        postdate date default sysdate
+        )
+
+        create sequence seq_bbs
+        nocache
+        nocycle;
+
+        insert into bbs 
+        values(SEQ_BBS.NEXTVAL,'KIM','가길동입니다',SYSDATE);
+
+        COMMIT;
+
+        select *
+        from bbs;
