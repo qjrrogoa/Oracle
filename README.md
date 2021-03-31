@@ -1688,5 +1688,56 @@ STEP 3] 밖의 WHERE절에서 ROWNUM을 별칭한 이름으로 between a and b
 
         COMMIT;
 
-        select *
-        from bbs;
+        var return_var number;
+        exec SP_DEL_MEMBER('KOSMO',:return_var);
+        print return_var;
+
+
+        //회원아이디와 비밀번호를 받아 회원인지 판단하는 프로시져
+        create or replace procedure sp_ismember(
+        id_ member.id%type,
+        pwd_ member.pwd%type,
+        RTVAL out number)
+        is
+            FLAG number(1);
+        begin
+            select count(*)
+            into FLAG
+            from member
+            where id=id_;
+
+            if FLAG = 0 then
+                RTVAL := -1;
+            else -- 아이디 일치
+                select count(*)
+                into FLAG
+                from member
+                where id=id_ and pwd = pwd_;
+
+                if flag = 0 then -- 비밀번호 불 일치
+                    RTVAL := 0;
+                else 
+                    RTVAL := 1;
+                end if;
+            end if;
+        end;
+        /
+        
+        --회원인 경우
+        exec SP_ismember('KIM','9999',:return_var);
+        print return_var;
+
+        --아이디는 일치하는데 비밀번호 틀린경우
+        exec SP_ismember('KIM','99',:return_var);
+        print return_var;
+
+        -- 아이디 불 일치
+        exec SP_ismember('KIM1','9999',:return_var);
+        print return_var;
+        
+        
+# 트리거
+ - 자동으로 실행되는 프로시저의 한 종류, 직접 (exec) 실행 불가
+ - 하나의 테이블에 최대 3개까지 트리거 적용 가능 단, 트리거 많을 수록 성능 저하 초래
+ - 트리거 몸체(PL/SQL)안에는 COMMIT;,ROLLBACK불가
+ - :NEW(변경 후), :OLD(변경 전) 임시테이블을 행 단위 트리거에서만 사용 가능
