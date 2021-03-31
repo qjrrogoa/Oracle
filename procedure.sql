@@ -1,7 +1,7 @@
 --입력값 받는 프로스져
         create or replace procedure SP_INS_MEMBER(
             id_ member.id%type,
-            pwd member.pwd%type,
+            pwd_ member.pwd%type,
             name_ member.name%type,
             RTVAR out NVARCHAR2
         )
