@@ -1,4 +1,4 @@
---ÀÔ·Â°ª ¹Ş´Â ÇÁ·Î½ºÁ®
+--ì…ë ¥ê°’ ë°›ëŠ” í”„ë¡œìŠ¤ì ¸
         create or replace procedure SP_INS_MEMBER(
             id_ member.id%type,
             pwd_ member.pwd%type,
@@ -11,20 +11,20 @@
             values(id_,pwd_,name_);
 
             if SQL%FOUND then 
-                RTVAR := 'ÀÔ·Â ¼º°ø';
+                RTVAR := 'ì…ë ¥ ì„±ê³µ';
                 COMMIT;
             end if;
 
             exception
                 when others then
                     ROLLBACK;
-                    RTVAL := 'ÀÔ·Â½ÇÆĞ - Áßº¹Å°°Å³ª ÀÔ·Â °ªÀÌ Å©´Ù';
+                    RTVAL := 'ì…ë ¥ì‹¤íŒ¨ - ì¤‘ë³µí‚¤ê±°ë‚˜ ì…ë ¥ ê°’ì´ í¬ë‹¤';
         end;
         /
         
         VAR RTVAL NVARCHAR2(50)
 
-        EXEC SP_INS_MEMBER('KIM','1234','±è±æµ¿',:RTVAL)
+        EXEC SP_INS_MEMBER('KIM','1234','ê¹€ê¸¸ë™',:RTVAL)
         
         
         
@@ -34,7 +34,7 @@
         SELECT * FROM MEMBER
         
         
-        --¼öÁ¤ÇÏ´Â ÇÁ·Î½ÃÁ®
+        --ìˆ˜ì •í•˜ëŠ” í”„ë¡œì‹œì ¸
         create or replace procedure SP_UP_MEMBER(
         ID_ IN MEMBER.ID%TYPE,
         PWD_ MEMBER.PWD%TYPE,
@@ -62,7 +62,7 @@
         /
 
         var RT_VAR CHAR(50);
-        exec SP_UP_MEMBER('KIM1','9999','°¡±æµ¿',:RT_VAR);
+        exec SP_UP_MEMBER('KIM1','9999','ê°€ê¸¸ë™',:RT_VAR);
         print rt_var;
 
         select *
@@ -79,18 +79,18 @@
             where id =id_;
 
         if SQL%FOUND then
-            DBMS_OUTPUT.put_LINE(ID_||'°¡ »èÁ¦µÇ¾ú¾î¿ä');
+            DBMS_OUTPUT.put_LINE(ID_||'ê°€ ì‚­ì œë˜ì—ˆì–´ìš”');
             AFFECTED := SQL%ROWCOUNT;
             commit;
         else 
-             DBMS_OUTPUT.put_LINE(ID_||'°¡ Á¸ÀçÇÏÁö ¾Ê¾Æ¿ä');
+             DBMS_OUTPUT.put_LINE(ID_||'ê°€ ì¡´ì¬í•˜ì§€ ì•Šì•„ìš”');
              AFFECTED := -1;
            end if;
 
          EXCEPTION
             WHEN OTHERS THEN
                 ROLLBACK;
-               DBMS_OUTPUT.put_LINE('ÀÚ½ÄÀÌ ÂüÁ¶ÇÏ°í ÀÖ¾î¿ä');
+               DBMS_OUTPUT.put_LINE('ìì‹ì´ ì°¸ì¡°í•˜ê³  ìˆì–´ìš”');
                 AFFECTED := -2;
         end;
         /
@@ -107,7 +107,7 @@
         nocycle;
 
         insert into bbs 
-        values(SEQ_BBS.NEXTVAL,'KIM','°¡±æµ¿ÀÔ´Ï´Ù',SYSDATE);
+        values(SEQ_BBS.NEXTVAL,'KIM','ê°€ê¸¸ë™ì…ë‹ˆë‹¤',SYSDATE);
 
         COMMIT;
 
@@ -116,7 +116,7 @@
         print return_var;
 
 
-        --È¸¿ø¾ÆÀÌµğ¿Í ºñ¹Ğ¹øÈ£¸¦ ¹Ş¾Æ È¸¿øÀÎÁö ÆÇ´ÜÇÏ´Â ÇÁ·Î½ÃÁ®
+        --íšŒì›ì•„ì´ë””ì™€ ë¹„ë°€ë²ˆí˜¸ë¥¼ ë°›ì•„ íšŒì›ì¸ì§€ íŒë‹¨í•˜ëŠ” í”„ë¡œì‹œì ¸
         create or replace procedure sp_ismember(
         id_ member.id%type,
         pwd_ member.pwd%type,
@@ -131,13 +131,13 @@
 
             if FLAG = 0 then
                 RTVAL := -1;
-            else -- ¾ÆÀÌµğ ÀÏÄ¡
+            else -- ì•„ì´ë”” ì¼ì¹˜
                 select count(*)
                 into FLAG
                 from member
                 where id=id_ and pwd = pwd_;
 
-                if flag = 0 then -- ºñ¹Ğ¹øÈ£ ºÒ ÀÏÄ¡
+                if flag = 0 then -- ë¹„ë°€ë²ˆí˜¸ ë¶ˆ ì¼ì¹˜
                     RTVAL := 0;
                 else 
                     RTVAL := 1;
@@ -146,15 +146,15 @@
         end;
         /
         
-        --È¸¿øÀÎ °æ¿ì
+        --íšŒì›ì¸ ê²½ìš°
         exec SP_ismember('KIM','9999',:return_var);
         print return_var;
 
-        --¾ÆÀÌµğ´Â ÀÏÄ¡ÇÏ´Âµ¥ ºñ¹Ğ¹øÈ£ Æ²¸°°æ¿ì
+        --ì•„ì´ë””ëŠ” ì¼ì¹˜í•˜ëŠ”ë° ë¹„ë°€ë²ˆí˜¸ í‹€ë¦°ê²½ìš°
         exec SP_ismember('KIM','99',:return_var);
         print return_var;
 
-        -- ¾ÆÀÌµğ ºÒ ÀÏÄ¡
+        -- ì•„ì´ë”” ë¶ˆ ì¼ì¹˜
         exec SP_ismember('KIM1','9999',:return_var);
         print return_var;
         
