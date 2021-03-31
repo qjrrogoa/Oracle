@@ -1599,14 +1599,8 @@ STEP 3] 밖의 WHERE절에서 ROWNUM을 별칭한 이름으로 between a and b
         /
         
         VAR RTVAL NVARCHAR2(50)
-
-        EXEC SP_INS_MEMBER('KIM','1234','김길동',:RTVAL)
-        
-        
-        
-
+        EXEC SP_INS_MEMBER('KIM','1234','김길동',:RTVAL)       
         PRINT RTVAL
-
         SELECT * FROM MEMBER
         
         
