@@ -1279,7 +1279,7 @@ STEP 3] 밖의 WHERE절에서 ROWNUM을 별칭한 이름으로 between a and b
         
         select ename
         from emp
-        --where ename like '%%S';
+        --where ename like '%S%';
         where instr(upper(ename),'S') != 0;
         
 11] SUBSTR
@@ -1293,4 +1293,153 @@ STEP 3] 밖의 WHERE절에서 ROWNUM을 별칭한 이름으로 between a and b
         select ename,RPAD(substr(ename,1,1),length(ename),'*')
         from emp;
        
-       
+12 REPLACE
+---
+ - REPLACE('문자열','찾을 문자열','바꿀 문자열')
+
+        select replace ('HELLO WORLD','HELLO','JAVA')
+        from dual;
+        
+        select replace(replace(upper(job),'MAN','WOMAN'),'WOMANAGER','MANAGER') job
+        FROM emp;
+
+13 TO_CHAR
+---
+ - TO_CHAR(숫자 혹은 날짜) : CHAR형으로 바꿔준다.
+ - TO_CHAR(숫자, '숫자형식 포맷 문자열') 
+    - 9는 값이 있으면 표시, 없으면 표시 안함
+    - 0은 값이 있으면 표시, 없으면 0으로 표시
+    - 단, 소수점은 9든 0이든 값이 없으면 모두 0으로 표시됨
+    - 소수점은 실제값의 자리수가 많으면 나머지는 짤림
+    - 정수인 경우는 실제값의 자리수가 많으면 값이 #으로 표시됨
+            
+            select to_char(1004,'99')
+            from dual;
+            // ###
+
+            select to_char(1004,'9999')
+            from dual;
+            // 1004
+
+            select to_char(1004,'9,999')
+            from dual;
+            // 1,004
+
+            select to_char(1004,'$9,999')
+            from dual;
+            // $1,004
+
+            select to_char(1004,'L9,999')
+            from dual;
+            // \1,004 (원)
+
+            select to_char(3.1459,'999,999.99')
+            from dual;
+            // 3.15
+
+            select to_char(3.1,'999,999.99')
+            from dual;
+            // 3.10
+            
+ - TO_CHAR(날짜,'날짜형식 포맷 문자열')
+    - d : 요일 반환 (일요일은 1, 월요일은 2)
+    - dd : 일
+    - ddd : 365일 중 오늘 며칠째인지
+    - day : 수요일
+    - dy : 수
+    
+            select to_char(sysdate,'YYYY-mm-dd hh:mi:ss')
+            from dual;
+
+            select to_char(sysdate,'YYYY"년"mm"월"dd"일" hh:mi:ss')
+            from dual;
+
+            select to_char(sysdate,'ddd')
+            from dual;
+            // 90
+            
+            select sysdate +1 
+            from dual;
+            // 2021-04-01
+            
+            select to_date('2021-03-31') +1
+            from dual;
+            // 21-04-01
+            
+            select '내일은 ' || to_char(to_date('2021-03-31')+1,'yyyy-mm-dd') || '입니다'
+            from dual;
+            // 내일은 2021-04-01입니다.
+            
+            select to_char(to_date('2021-08-13') - sysdate,999)
+            from dual;
+            // 135
+            
+            select to_char(hiredate,'yyyy-mm-dd') hiredate
+            from emp
+            where '1981-05-01' >= hiredate;
+            
+            select months_between(sysdate,'2021-08-13')
+            from dual;
+            // -4
+            
+            select add_months(sysdate,2)
+            from dual;
+            // 21/05/31
+            
+            
+14] MATH
+---
+- DECODE(컬럼,결과값1,값1,결과값2,값2,값3)
+
+           select decode(upper(job),'CLERK','점원','MANAGER','매니져','기타') job
+           from emp;
+           
+           select decode(deptno,'10','회계부','20','조사부','영업부') 부서
+           from emp;
+          
+           select round(3.5) 
+           from dual;
+           // 4
+           
+           select floor(3.5)
+           from dual;
+           // 3
+           
+           select ceil(3.5)
+           from dual;
+           // 4
+            
+           select power(2,3)
+           from dual;
+           // 8
+           
+           select sqrt(9)
+           from dual;
+           // 3
+           
+15] CASE
+---
+    CASE 칼럼 WHEN '조건1' THEN '값1'
+            WHEN '조건2' THEN '값2'
+            ELSE '기타'
+    end 별칭
+    
+    select 
+    case deptno when 10 then '재정부'
+    when 20 then '조사부'
+    else '영업부'
+    end 부서, ename
+    from emp;
+    
+    select ename,
+    case
+    when sal >= 3000 then '고액 연봉'
+    when sal >= 2000 then '중간 연봉'
+    else '저액 연봉'
+    end salary, sal
+    from emp;
+
+
+
+
+
