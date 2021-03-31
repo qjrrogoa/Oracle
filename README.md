@@ -1458,10 +1458,9 @@ STEP 3] 밖의 WHERE절에서 ROWNUM을 별칭한 이름으로 between a and b
         CURSOR 커서명 IS
             SELECT문장 ----- DECLARE부에서 한다
             (INTO절이 없는 SELECT문)
-       
             OPEN 커서명
-            
-            FETCH 커서명 INTO{variable1[,variable2,...]};
+            FETCH 커서명 
+            INTO{variable1[,variable2,...]};
             
             CLOSE 커서명
             
