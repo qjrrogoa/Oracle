@@ -1542,3 +1542,27 @@ STEP 3] 밖의 WHERE절에서 ROWNUM을 별칭한 이름으로 between a and b
 
             select ename,get(ename)
             from emp;
+            
+            
+            create or replace function getday(en_ date)
+            return varchar2
+            IS
+            begin
+               return  to_char(en_,'yyyy-mm-dd');
+            end;
+
+            select getday('21-08-13')
+            from dual;
+
+            select hiredate,getday(hiredate)
+            from emp;
+
+
+# 저장 프로시져
+ - 프로시저는 RETURN문이 없다 OUT 매개변수로 값을 RETURN한다.
+ - 저장 프로시져의 장점
+    - 매우 좋은 성능 (여러명이 사용할 때 SQL문은 할때마다 parsing, 프로시져는 처음에 한번 만)
+    - 보안성을 높일 수 있음
+    - 다양한 처리가 가능
+    - 네트웍의 부하를 줄일 수 있음
+ - 무조건 EXECUTE해야한다.
