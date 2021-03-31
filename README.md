@@ -880,22 +880,7 @@ STEP 3] 밖의 WHERE절에서 ROWNUM을 별칭한 이름으로 between a and b
         end;
         /
 
-        declare
-        i number := 1;
-        j number;
-        begin
-            while i <= 9 loop
-                j:=2;
-                while j <=9 loop
-                    dbms_output.put(j || '  *  ' || i || ' = ' || j*i|| '   ');
-                    j := j+1;
-                end loop;
-                dbms_output.new_line;
-                i := i+1;
-            end loop;
-        end;
-        /
-
+        
 [4] Loop문
 
  - do while문하고 똑같다
@@ -976,7 +961,7 @@ STEP 3] 밖의 WHERE절에서 ROWNUM을 별칭한 이름으로 between a and b
         end;
         /
         
- - put하면 줄 띄우기 안하지만 반드시 줄 띄우기 라인 하나 만들어야 실행된다.
+ - put하면 줄 띄우기 안하 반드시 줄 띄우기 라인 하나 만들어야 실행된다.
  
         begin
             dbms_output.put('A');
@@ -1051,6 +1036,23 @@ STEP 3] 밖의 WHERE절에서 ROWNUM을 별칭한 이름으로 between a and b
             end loop;
         end;
         /
+        
+        declare
+        i number := 1;
+        j number;
+        begin
+            while i <= 9 loop
+                j:=2;
+                while j <=9 loop
+                    dbms_output.put(j || '  *  ' || i || ' = ' || j*i|| '   ');
+                    j := j+1;
+                end loop;
+                dbms_output.new_line;
+                i := i+1;
+            end loop;
+        end;
+        /
+
         
 [7] SQL%FOUND
  - 영향 받은 행의 수?
