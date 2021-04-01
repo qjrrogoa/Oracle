@@ -1905,6 +1905,6 @@ STEP 3] 밖의 WHERE절에서 ROWNUM을 별칭한 이름으로 between a and b
         end;
         /
 
-insert into sales(s_no,p_code,s_qty,s_price)
-values(1,'p001',149,3000);
+        insert into sales(s_no,p_code,s_qty,s_price)
+        values(1,'p001',149,3000);
 
