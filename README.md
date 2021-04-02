@@ -1575,28 +1575,28 @@ STEP 3] 밖의 WHERE절에서 ROWNUM을 별칭한 이름으로 between a and b
  - 무조건 EXECUTE해야한다.
 
         //입력값 받는 프로스져
-        create or replace procedure SP_INS_MEMBER(
-            id_ member.id%type,
-            pwd_ member.pwd%type,
-            name_ member.name%type,
-            RTVAR out NVARCHAR2
-        )
-        IS
-        begin
-            insert into member(id,pwd,name)
-            values(id_,pwd_,name_);
+         create or replace procedure SP_INS_MEMBER(
+         id_ member.id%type,
+         pwd_ member.pwd%type,
+         name_ member.name%type,
+         RTVAL out NVARCHAR2
+         )
+         IS
+         begin
+             insert into member(id,pwd,name)
+             values(id_,pwd_,name_);
 
-            if SQL%FOUND then 
-                RTVAR := '입력 성공';
-                COMMIT;
-            end if;
+             if SQL%FOUND then 
+                 RTVAL := '입력 성공';
+                 COMMIT;
+             end if;
 
-            exception
-                when others then
-                    ROLLBACK;
-                    RTVAL := '입력실패 - 중복키거나 입력 값이 크다';
-        end;
-        /
+             exception
+                 when others then
+                     ROLLBACK;
+                     RTVAL := '입력실패 - 중복키거나 입력 값이 크다';
+         end;
+         /
         
         VAR RTVAL NVARCHAR2(50)
         EXEC SP_INS_MEMBER('KIM','1234','김길동',:RTVAL)       
